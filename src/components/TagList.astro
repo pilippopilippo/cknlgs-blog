@@ -1,0 +1,61 @@
+---
+interface Props {
+	tags: { slug: string; label: string; count?: number }[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+	tags.length > 0 && (
+		<ul class="tag-list">
+			{tags.map((tag) => (
+				<li>
+					<a class="tag" href={`/tags/${tag.slug}/`}>
+						#{tag.label}
+						{tag.count !== undefined && <span class="count">{tag.count}</span>}
+					</a>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style is:global>
+	.tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5em;
+		margin: 0.5em 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.tag {
+		display: inline-block;
+		padding: 0.15em 0.7em;
+		font: inherit;
+		font-size: 0.85em;
+		line-height: 1.6;
+		color: rgb(var(--gray-dark));
+		background: rgb(var(--gray-light));
+		border: 1px solid transparent;
+		border-radius: 999px;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.tag:hover,
+	.tag:focus-visible {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+	.tag.active {
+		color: white;
+		background: var(--accent);
+		border-color: var(--accent);
+	}
+	.tag .count {
+		margin-left: 0.4em;
+		opacity: 0.6;
+	}
+</style>

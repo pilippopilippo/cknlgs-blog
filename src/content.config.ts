@@ -15,6 +15,8 @@ const blog = defineCollection({
 			updatedDate: z.coerce.date().optional(),
 			// Path relative to the post file, e.g. "./copertina.jpg" (optimized at build time)
 			heroImage: image().optional(),
+			// Topics, e.g. ["viaggi", "cucina"]; case and accents are normalized in URLs
+			tags: z.array(z.string().trim().toLowerCase().min(1)).default([]),
 			// Draft posts are excluded from the home page, post routes and RSS feed
 			draft: z.boolean().default(false),
 		}),
