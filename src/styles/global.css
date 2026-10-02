@@ -6,9 +6,9 @@
 
 :root {
 	color-scheme: light;
-	/* Same hue as the dark theme's lilac, darker for contrast on white (7:1) */
-	--accent: #4f42c9;
-	--accent-dark: #2f2685;
+	/* Persimmon orange; darker in the light theme for contrast on white (5.2:1) */
+	--accent: #b84a12;
+	--accent-dark: #8a370d;
 	/* Text on an accent-colored background */
 	--on-accent: #fff;
 	/* Neutral grays, matching the dark theme */
@@ -35,9 +35,9 @@
 */
 :root[data-theme="dark"] {
 	color-scheme: dark;
-	--accent: #9b92e4;
-	--accent-dark: #c9c3f2;
-	--on-accent: #1d1647;
+	--accent: #f08a4b;
+	--accent-dark: #f6b38a;
+	--on-accent: #161616;
 	--black: 245, 245, 243;
 	--gray: 170, 170, 168;
 	--gray-light: 48, 48, 46;
@@ -51,9 +51,9 @@
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
 		color-scheme: dark;
-		--accent: #9b92e4;
-		--accent-dark: #c9c3f2;
-		--on-accent: #1d1647;
+		--accent: #f08a4b;
+		--accent-dark: #f6b38a;
+		--on-accent: #161616;
 		--black: 245, 245, 243;
 		--gray: 170, 170, 168;
 		--gray-light: 48, 48, 46;
@@ -233,4 +233,32 @@ hr {
 /* Code blocks: neutral dark gray in both themes instead of the highlighter's blue-gray */
 .astro-code {
 	background-color: #20201f !important;
+}
+
+/*
+  Page transitions (View Transitions API): pages cross-fade when navigating, and a post's
+  cover image morphs from its card on the home page into the article header.
+  Browsers without support simply change page as usual.
+*/
+@view-transition {
+	navigation: auto;
+}
+::view-transition-group(*) {
+	animation-duration: 0.3s;
+}
+
+/* All motion is turned off for visitors who ask their system to reduce it */
+@media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: none;
+	}
+	*,
+	*::before,
+	*::after,
+	::backdrop {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }

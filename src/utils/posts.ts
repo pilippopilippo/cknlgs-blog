@@ -26,6 +26,11 @@ export function tagSlug(tag: string): string {
 		.replace(/^-+|-+$/g, '');
 }
 
+/** view-transition-name shared by a post's cover on the home page and in the article */
+export function coverTransitionName(postId: string): string {
+	return `cover-${tagSlug(postId)}`;
+}
+
 /** A post's tags, deduplicated by slug */
 export function postTags(post: Post): Omit<Tag, 'count'>[] {
 	const tags = new Map<string, string>();

@@ -6,14 +6,18 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import PostEnhancements from '../components/PostEnhancements.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
 import TagList from '../components/TagList.astro';
-import { tagSlug } from '../utils/posts';
+import { coverTransitionName, tagSlug } from '../utils/posts';
 import { SITE_DESCRIPTION } from '../consts';
 
 type PostData = CollectionEntry<'blog'>['data'];
 // Date and description are optional so standalone pages (e.g. About) can use this layout too
 type Props = Omit<PostData, 'draft' | 'pubDate' | 'description' | 'tags'> &
-	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags'>>;
+	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags'>> & {
+		/** Post id, used to link the cover image to its card on the home page */
+		postId?: string;
+	};
 
 const {
 	title,
@@ -23,6 +27,7 @@ const {
 	heroImage,
 	tags = [],
 	author,
+	postId,
 } = Astro.props;
 const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entries()]
 	.filter(([slug]) => slug)
@@ -97,11 +102,21 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 	</head>
 
 	<body>
+		{postId && <ReadingProgress />}
 		<Header />
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} src={heroImage} alt="" />}
+					{
+						heroImage && (
+							<Image
+								width={1020}
+								src={heroImage}
+								alt=""
+								style={postId ? `view-transition-name: ${coverTransitionName(postId)}` : undefined}
+							/>
+						)
+					}
 				</div>
 				<div class="prose">
 					<div class="title">

@@ -1,6 +1,7 @@
 ---
 // Article page extras:
-// - click an image to open it full screen at its highest available resolution
+// - click an image to open it full screen at its highest available resolution (it grows
+//   from its position on the page and shrinks back when closed)
 // - "Copy" button on every code block
 ---
 
@@ -28,14 +29,80 @@
 	const preview = dialog?.querySelector('img');
 
 	if (dialog && preview) {
-		const open = (img: HTMLImageElement) => {
-			preview.src = largestSource(img);
-			preview.alt = img.alt;
-			dialog.showModal();
+		const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+		const duration = 250;
+		let source: HTMLImageElement | null = null;
+
+		// Transform that places the full-screen preview exactly over the thumbnail
+		const fromThumbnail = () => {
+			if (!source) return 'none';
+			const from = source.getBoundingClientRect();
+			const to = preview.getBoundingClientRect();
+			if (!to.width || !to.height) return 'none';
+			const dx = from.left + from.width / 2 - (to.left + to.width / 2);
+			const dy = from.top + from.height / 2 - (to.top + to.height / 2);
+			return `translate(${dx}px, ${dy}px) scale(${from.width / to.width}, ${from.height / to.height})`;
 		};
-		// Any click (on the image or the backdrop) closes it; Esc is handled by <dialog>
-		dialog.addEventListener('click', () => dialog.close());
-		dialog.addEventListener('close', () => preview.removeAttribute('src'));
+
+		const open = (img: HTMLImageElement) => {
+			source = img;
+			// Start from the already loaded thumbnail, then swap in the full-resolution file
+			preview.src = img.currentSrc || img.src;
+			preview.alt = img.alt;
+			// Known proportions right away, so the opening animation can be measured
+			preview.width = img.naturalWidth || img.width;
+			preview.height = img.naturalHeight || img.height;
+			const full = largestSource(img);
+			if (full !== preview.src) {
+				const loader = new Image();
+				loader.onload = () => {
+					if (dialog.open && source === img) preview.src = full;
+				};
+				loader.src = full;
+			}
+			dialog.showModal();
+			if (!reduceMotion.matches) {
+				preview.animate([{ transform: fromThumbnail() }, { transform: 'none' }], {
+					duration,
+					easing: 'cubic-bezier(0.2, 0, 0, 1)',
+				});
+				dialog.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: 'ease-out' });
+			}
+		};
+
+		const close = () => {
+			if (!dialog.open || dialog.classList.contains('closing')) return;
+			if (reduceMotion.matches) {
+				dialog.close();
+				return;
+			}
+			dialog.classList.add('closing');
+			preview.animate([{ transform: 'none' }, { transform: fromThumbnail() }], {
+				duration: 200,
+				easing: 'cubic-bezier(0.4, 0, 1, 1)',
+				fill: 'forwards',
+			});
+			dialog
+				.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' })
+				.finished.then(() => {
+					dialog.classList.remove('closing');
+					dialog.close();
+					dialog.getAnimations().forEach((animation) => animation.cancel());
+					preview.getAnimations().forEach((animation) => animation.cancel());
+				});
+		};
+
+		// Any click (on the image or the backdrop) or Esc closes it, with the reverse animation
+		dialog.addEventListener('click', close);
+		dialog.addEventListener('cancel', (event) => {
+			event.preventDefault();
+			close();
+		});
+		dialog.addEventListener('close', () => {
+			preview.removeAttribute('src');
+			source?.focus({ preventScroll: true });
+			source = null;
+		});
 
 		for (const img of document.querySelectorAll<HTMLImageElement>('article img')) {
 			img.classList.add('zoomable');
@@ -98,6 +165,21 @@
 	}
 	dialog.lightbox::backdrop {
 		background: rgba(0, 0, 0, 0.85);
+	}
+	/* The backdrop fades together with the dialog (opacity animated from the script) */
+	dialog.lightbox[open]::backdrop {
+		transition: opacity 0.25s ease;
+	}
+	dialog.lightbox.closing::backdrop {
+		opacity: 0;
+	}
+	@starting-style {
+		dialog.lightbox[open]::backdrop {
+			opacity: 0;
+		}
+	}
+	dialog.lightbox img {
+		will-change: transform;
 	}
 	dialog.lightbox img {
 		max-width: 95vw;
