@@ -6,7 +6,7 @@ heroImage: "./copertina.jpg"
 author: "pilippopilippo"
 lang: "it"
 tags: ["test", "esempio", "immagini"]
-draft: false
+draft: true
 ---
 
 Questo è un articolo di esempio. Ogni post vive in una cartella tutta sua, insieme alle sue immagini:
