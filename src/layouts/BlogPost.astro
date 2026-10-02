@@ -36,7 +36,13 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} image={heroImage} author={author} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={heroImage}
+			author={author}
+			publishedTime={postId ? pubDate : undefined}
+		/>
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -104,7 +110,7 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 	<body>
 		{postId && <ReadingProgress />}
 		<Header />
-		<main>
+		<main id="main">
 			<article>
 				<div class="hero-image">
 					{
@@ -113,6 +119,8 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 								width={1020}
 								src={heroImage}
 								alt=""
+								loading="eager"
+								fetchpriority="high"
 								style={postId ? `view-transition-name: ${coverTransitionName(postId)}` : undefined}
 							/>
 						)

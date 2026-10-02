@@ -5,9 +5,8 @@
 // - "Copy" button on every code block
 ---
 
-<dialog class="lightbox" aria-label="Image preview">
-	<img alt="" />
-</dialog>
+<!-- The preview <img> is created by the script, so the page never contains an image without src -->
+<dialog class="lightbox" aria-label="Image preview"></dialog>
 
 <script>
 	// Pick the widest candidate from srcset (the original resolution), falling back to src
@@ -26,7 +25,9 @@
 	}
 
 	const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
-	const preview = dialog?.querySelector('img');
+	const preview = document.createElement('img');
+	preview.alt = '';
+	dialog?.appendChild(preview);
 
 	if (dialog && preview) {
 		const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -48,7 +49,7 @@
 			source = img;
 			// Start from the already loaded thumbnail, then swap in the full-resolution file
 			preview.src = img.currentSrc || img.src;
-			preview.alt = img.alt;
+			preview.alt = img.dataset.description ?? '';
 			// Known proportions right away, so the opening animation can be measured
 			preview.width = img.naturalWidth || img.width;
 			preview.height = img.naturalHeight || img.height;
@@ -108,6 +109,10 @@
 			img.classList.add('zoomable');
 			img.tabIndex = 0;
 			img.setAttribute('role', 'button');
+			// An image without a description (e.g. a cover) can't be a button with alt="";
+			// give it a text alternative describing the action
+			img.dataset.description = img.alt;
+			if (!img.alt) img.alt = 'Enlarge image';
 			img.addEventListener('click', () => open(img));
 			img.addEventListener('keydown', (event) => {
 				if (event.key === 'Enter' || event.key === ' ') {
@@ -128,6 +133,8 @@
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.className = 'copy-button';
+		// Screen readers announce the 'Copied!' feedback
+		button.setAttribute('aria-live', 'polite');
 		button.textContent = 'Copy';
 		button.addEventListener('click', async () => {
 			const text = (pre.querySelector('code') ?? pre).textContent ?? '';
