@@ -32,34 +32,32 @@
 */
 :root[data-theme="dark"] {
 	color-scheme: dark;
-	--accent: #8c9bff;
-	--accent-dark: #c3cbff;
-	--on-accent: #0f1219;
-	--black: 236, 239, 245;
-	--gray: 148, 162, 196;
-	--gray-light: 44, 51, 68;
-	--gray-dark: 205, 211, 224;
-	--bg: #0f1219;
-	--surface: #171c27;
+	--accent: #9b92e4;
+	--accent-dark: #c9c3f2;
+	--on-accent: #1d1647;
+	--black: 245, 245, 243;
+	--gray: 158, 158, 156;
+	--gray-light: 48, 48, 46;
+	--gray-dark: 224, 224, 221;
+	--bg: #161616;
+	--surface: #20201f;
 	--box-shadow:
-		0 2px 6px rgba(var(--shadow), 40%), 0 8px 24px rgba(var(--shadow), 50%),
-		0 16px 32px rgba(var(--shadow), 50%);
+		0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 50%), 0 16px 32px rgba(0, 0, 0, 50%);
 }
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
 		color-scheme: dark;
-		--accent: #8c9bff;
-		--accent-dark: #c3cbff;
-		--on-accent: #0f1219;
-		--black: 236, 239, 245;
-		--gray: 148, 162, 196;
-		--gray-light: 44, 51, 68;
-		--gray-dark: 205, 211, 224;
-		--bg: #0f1219;
-		--surface: #171c27;
+		--accent: #9b92e4;
+		--accent-dark: #c9c3f2;
+		--on-accent: #1d1647;
+		--black: 245, 245, 243;
+		--gray: 158, 158, 156;
+		--gray-light: 48, 48, 46;
+		--gray-dark: 224, 224, 221;
+		--bg: #161616;
+		--surface: #20201f;
 		--box-shadow:
-			0 2px 6px rgba(var(--shadow), 40%), 0 8px 24px rgba(var(--shadow), 50%),
-			0 16px 32px rgba(var(--shadow), 50%);
+			0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 50%), 0 16px 32px rgba(0, 0, 0, 50%);
 	}
 }
 @font-face {
@@ -199,4 +197,14 @@ hr {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+/* Code blocks: in the dark theme use the neutral surface gray instead of the highlighter's blue-gray */
+:root[data-theme="dark"] .astro-code {
+	background-color: var(--surface) !important;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) .astro-code {
+		background-color: var(--surface) !important;
+	}
 }
