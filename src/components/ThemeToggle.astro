@@ -35,15 +35,27 @@
 	if (button) {
 		button.hidden = false;
 		button.setAttribute('aria-label', label());
+		const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 		button.addEventListener('click', () => {
 			const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-			root.dataset.theme = next;
+			const apply = () => {
+				root.dataset.theme = next;
+				button.setAttribute('aria-label', label());
+			};
 			try {
 				localStorage.setItem('theme', next);
 			} catch {
 				// Storage unavailable (e.g. private mode): the choice lasts for this page only
 			}
-			button.setAttribute('aria-label', label());
+			if (reduceMotion.matches || !document.startViewTransition) {
+				apply();
+				return;
+			}
+			// Cross-fade the whole page between the two themes, and spin the icon in
+			root.classList.add('theme-switching');
+			document.startViewTransition(apply).finished.finally(() => {
+				root.classList.remove('theme-switching');
+			});
 		});
 		// Keep the label right if the theme follows a device change
 		new MutationObserver(() => button.setAttribute('aria-label', label())).observe(root, {
@@ -84,5 +96,14 @@
 	}
 	:global([data-theme='dark']) .icon-moon {
 		display: none;
+	}
+	:global(.theme-switching) .theme-toggle svg {
+		animation: icon-spin-in 0.35s ease-out;
+	}
+	@keyframes icon-spin-in {
+		from {
+			transform: rotate(-90deg) scale(0.5);
+			opacity: 0;
+		}
 	}
 </style>

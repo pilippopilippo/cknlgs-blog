@@ -63,6 +63,8 @@ import { SITE_TITLE } from '../consts';
 
 <style>
 	header {
+		/* Kept out of the page cross-fade so it doesn't flicker when navigating */
+		view-transition-name: site-header;
 		position: relative;
 		z-index: 10;
 		margin: 0;
