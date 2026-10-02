@@ -15,6 +15,8 @@ export default defineConfig({
 	},
 	// Keep Astro 5 whitespace handling (Astro 7 defaults to "jsx", which removes spaces between inline elements)
 	compressHTML: true,
+	// The site's CSS is small: inline it in each page instead of separate render-blocking files
+	build: { inlineStylesheets: "always" },
 	integrations: [mdx(), sitemap()],
 	// Generate several sizes of each image so phones download smaller files
 	image: { layout: "constrained" },

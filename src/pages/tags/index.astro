@@ -28,7 +28,7 @@ const tags = getTags(await getPublishedPosts());
 	</head>
 	<body>
 		<Header />
-		<main>
+		<main id="main">
 			<h1>Tags</h1>
 			{tags.length === 0 ? <p class="empty">No tags yet.</p> : <TagList tags={tags} />}
 		</main>

@@ -4,6 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
+<a class="skip-link" href="#main">Skip to content</a>
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
@@ -62,6 +63,22 @@ import { SITE_TITLE } from '../consts';
 </script>
 
 <style>
+	/* Hidden until focused with the keyboard (Tab), then shown above the header */
+	.skip-link {
+		position: absolute;
+		top: 0.5em;
+		left: 0.5em;
+		z-index: 30;
+		padding: 0.5em 1em;
+		color: var(--on-accent);
+		background: var(--accent);
+		border-radius: 8px;
+		text-decoration: none;
+		transform: translateY(-200%);
+	}
+	.skip-link:focus {
+		transform: none;
+	}
 	header {
 		/* Kept out of the page cross-fade so it doesn't flicker when navigating */
 		view-transition-name: site-header;
