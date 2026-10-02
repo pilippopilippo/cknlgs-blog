@@ -8,7 +8,11 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://cknlgs.cc",
-	redirects: { "/blog": "/" },
+	redirects: {
+		"/blog": "/",
+		// Browsers and crawlers request /favicon.ico when a page doesn't declare an icon (e.g. the RSS feed)
+		"/favicon.ico": "/favicon.svg",
+	},
 	// Keep Astro 5 whitespace handling (Astro 7 defaults to "jsx", which removes spaces between inline elements)
 	compressHTML: true,
 	integrations: [mdx(), sitemap()],

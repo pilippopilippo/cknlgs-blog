@@ -41,7 +41,50 @@ const { posts } = Astro.props;
 	}
 </ul>
 
+<script>
+	// Cards below the fold fade in as they scroll into view. Cards already visible on load,
+	// visitors without JavaScript and those who prefer reduced motion see them immediately.
+	// Skipped when coming back with the browser's Back button: the scroll position is restored
+	// and the cover image transitions back into its card, which must already be visible.
+	const cards = document.querySelectorAll<HTMLLIElement>('ul.post-list > li');
+	const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+	if (
+		'IntersectionObserver' in window &&
+		!matchMedia('(prefers-reduced-motion: reduce)').matches &&
+		navigation?.type !== 'back_forward'
+	) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('revealed');
+						observer.unobserve(entry.target);
+					}
+				}
+			},
+			{ rootMargin: '0px 0px -10% 0px' },
+		);
+		for (const card of cards) {
+			if (card.getBoundingClientRect().top > innerHeight) {
+				card.classList.add('reveal');
+				observer.observe(card);
+			}
+		}
+	}
+</script>
+
 <style>
+	ul li:global(.reveal) {
+		opacity: 0;
+		transform: translateY(1.5rem);
+		transition:
+			opacity 0.4s ease-out,
+			transform 0.4s ease-out;
+	}
+	ul li:global(.reveal.revealed) {
+		opacity: 1;
+		transform: none;
+	}
 	ul {
 		display: flex;
 		flex-wrap: wrap;
