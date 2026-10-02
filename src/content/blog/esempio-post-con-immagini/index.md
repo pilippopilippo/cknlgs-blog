@@ -4,6 +4,7 @@ description: "Come organizzare un articolo con le sue immagini in una cartella d
 pubDate: "Oct 02 2026"
 heroImage: "./copertina.jpg"
 author: "pilippopilippo"
+lang: "it"
 tags: ["test", "esempio", "immagini"]
 draft: false
 ---

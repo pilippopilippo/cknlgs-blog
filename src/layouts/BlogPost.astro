@@ -13,8 +13,8 @@ import { SITE_DESCRIPTION } from '../consts';
 
 type PostData = CollectionEntry<'blog'>['data'];
 // Date and description are optional so standalone pages (e.g. About) can use this layout too
-type Props = Omit<PostData, 'draft' | 'pubDate' | 'description' | 'tags'> &
-	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags'>> & {
+type Props = Omit<PostData, 'draft' | 'pubDate' | 'description' | 'tags' | 'lang'> &
+	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags' | 'lang'>> & {
 		/** Post id, used to link the cover image to its card on the home page */
 		postId?: string;
 	};
@@ -28,13 +28,16 @@ const {
 	tags = [],
 	author,
 	postId,
+	lang = 'en',
 } = Astro.props;
+// Search index (Pagefind): only articles are indexed, with their date for the results
+const searchDate = pubDate?.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
 const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entries()]
 	.filter(([slug]) => slug)
 	.map(([slug, label]) => ({ slug, label }));
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<BaseHead
 			title={title}
@@ -111,7 +114,10 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 		{postId && <ReadingProgress />}
 		<Header />
 		<main id="main">
-			<article>
+			<article
+				data-pagefind-body={postId ? '' : undefined}
+				data-pagefind-meta={postId && searchDate ? `date:${searchDate}` : undefined}
+			>
 				<div class="hero-image">
 					{
 						heroImage && (
@@ -130,7 +136,7 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 					<div class="title">
 						{
 							pubDate && (
-								<div class="date">
+								<div class="date" lang="en" data-pagefind-ignore>
 									<FormattedDate date={pubDate} />
 									{author && <span class="author"> · by {author}</span>}
 									{updatedDate && (

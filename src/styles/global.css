@@ -272,18 +272,16 @@ hr {
 	animation-duration: 0.3s;
 }
 
-/* All motion is turned off for visitors who ask their system to reduce it */
+/*
+  Reduced motion (e.g. Windows "Animation effects" off, iOS/Android "Reduce motion"):
+  following WCAG guidance, movement is removed but gentle fades stay. Here: pages still
+  cross-fade, but covers don't fly into the article. Each component handles its own effects.
+*/
 @media (prefers-reduced-motion: reduce) {
-	@view-transition {
-		navigation: none;
+	img[style*="view-transition-name"] {
+		view-transition-name: none !important;
 	}
-	*,
-	*::before,
-	*::after,
-	::backdrop {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
+	html {
+		scroll-behavior: auto;
 	}
 }
