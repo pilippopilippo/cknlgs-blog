@@ -135,11 +135,15 @@
 			const response = await engine.debouncedSearch(term, {}, 200);
 			// A newer search started meanwhile (or this one was debounced away)
 			if (response === null || id !== latest) return;
-			const results = await Promise.all(response.results.slice(0, 10).map((result) => result.data()));
+			// Only articles are shown: while no post is published Pagefind falls back to indexing
+			// every page (home, tags...), which shouldn't appear as results
+			const results = (await Promise.all(response.results.slice(0, 30).map((result) => result.data())))
+				.filter((result) => result.url.startsWith('/blog/'))
+				.slice(0, 10);
 			if (id !== latest) return;
 
 			status.textContent = results.length
-				? `${response.results.length} ${response.results.length === 1 ? 'result' : 'results'}`
+				? `${results.length} ${results.length === 1 ? 'result' : 'results'}`
 				: `No results for “${term}”`;
 			list.innerHTML = results
 				.map(
