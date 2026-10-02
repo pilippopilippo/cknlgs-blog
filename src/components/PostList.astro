@@ -47,6 +47,32 @@ const { posts } = Astro.props;
 	}
 	ul li {
 		width: calc(50% - 1rem);
+		position: relative;
+		/* Keeps the hover surface below the card content but above the page */
+		isolation: isolate;
+	}
+	/*
+	  Hover: Material Design-style elevation. Instead of a shadow (invisible on a dark
+	  background) a slightly lighter surface appears behind the card, in both themes.
+	  Drawn as a pseudo-element so it doesn't change the layout.
+	*/
+	ul li::before {
+		content: '';
+		position: absolute;
+		inset: -0.75rem;
+		z-index: -1;
+		border-radius: 18px;
+		background: var(--hover-surface);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+	@media (hover: hover) {
+		ul li:hover::before {
+			opacity: 1;
+		}
+	}
+	ul li:focus-within::before {
+		opacity: 1;
 	}
 	ul li :global(.tag-list) {
 		justify-content: flex-start;
@@ -91,12 +117,8 @@ const { posts } = Astro.props;
 		margin: 0;
 		color: rgb(var(--gray));
 	}
-	ul li a:hover h4,
-	ul li a:hover .date {
-		color: rgb(var(--accent));
-	}
-	ul a:hover img {
-		box-shadow: var(--box-shadow);
+	ul li a:hover h4 {
+		color: var(--accent);
 	}
 	.empty {
 		text-align: center;

@@ -19,6 +19,8 @@
 	/* Page background and raised surfaces (header, menus) */
 	--bg: #fff;
 	--surface: #fff;
+	/* Card background on hover (Material-style elevation: raised = lighter/tinted surface) */
+	--hover-surface: #f3f3f1;
 	/* Shadows stay dark in both themes */
 	--shadow: 22, 22, 22;
 	--box-shadow:
@@ -42,6 +44,7 @@
 	--gray-dark: 224, 224, 221;
 	--bg: #161616;
 	--surface: #20201f;
+	--hover-surface: #222221;
 	--box-shadow:
 		0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 50%), 0 16px 32px rgba(0, 0, 0, 50%);
 }
@@ -57,6 +60,7 @@
 		--gray-dark: 224, 224, 221;
 		--bg: #161616;
 		--surface: #20201f;
+	--hover-surface: #222221;
 		--box-shadow:
 			0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 50%), 0 16px 32px rgba(0, 0, 0, 50%);
 	}
@@ -153,6 +157,12 @@ img {
 	height: auto;
 	border-radius: 8px;
 }
+/* Code: monospaced fonts look bigger than text at the same size, so ~87.5% of the body size */
+code,
+pre {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+	font-size: 0.875em;
+}
 code {
 	padding: 2px 5px;
 	background-color: rgb(var(--gray-light));
@@ -161,6 +171,7 @@ code {
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	line-height: 1.6;
 }
 pre > code {
 	all: unset;
@@ -169,7 +180,8 @@ blockquote {
 	border-left: 4px solid var(--accent);
 	padding: 0 0 0 20px;
 	margin: 0px;
-	font-size: 1.2em;
+	/* Quotes inside an article stay at text size; the bar and indent set them apart */
+	font-size: 1em;
 }
 hr {
 	border: none;
