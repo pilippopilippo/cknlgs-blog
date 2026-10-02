@@ -3,7 +3,7 @@ title: "Esempio: post con immagini"
 description: "Come organizzare un articolo con le sue immagini in una cartella dedicata."
 pubDate: "Oct 02 2026"
 heroImage: "./copertina.jpg"
-draft: false
+draft: true
 ---
 
 Questo è un articolo di esempio. Ogni post vive in una cartella tutta sua, insieme alle sue immagini:
