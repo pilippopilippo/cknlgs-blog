@@ -3,6 +3,8 @@ title: "Esempio: post con immagini"
 description: "Come organizzare un articolo con le sue immagini in una cartella dedicata."
 pubDate: "Oct 02 2026"
 heroImage: "./copertina.jpg"
+author: "pilippopilippo"
+tags: ["test", "esempio", "immagini"]
 draft: false
 ---
 
