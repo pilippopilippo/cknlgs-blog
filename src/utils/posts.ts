@@ -16,6 +16,17 @@ export async function getPublishedPosts(): Promise<Post[]> {
 	return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
+/** Estimated reading time in minutes (about 220 words per minute, at least 1) */
+export function readingMinutes(post: Post): number {
+	const text = (post.body ?? '')
+		.replace(/```[\s\S]*?```/g, ' ') // code blocks are skimmed, not read word by word
+		.replace(/^(import|export) .*$/gm, ' ') // MDX imports
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, ' ') // images
+		.replace(/[#>*_`~\[\]()|-]/g, ' ');
+	const words = text.split(/\s+/).filter(Boolean).length;
+	return Math.max(1, Math.round(words / 220));
+}
+
 /** "Cucina Italiana" / "cucina-italiana" / "cucina italiàna" → "cucina-italiana" */
 export function tagSlug(tag: string): string {
 	return tag

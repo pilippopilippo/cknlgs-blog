@@ -6,14 +6,17 @@
 
 :root {
 	color-scheme: light;
-	/* Persimmon orange; darker in the light theme for contrast on white (5.2:1) */
+	/* Persimmon orange for decorative elements (bars, borders, indicators: 3:1 is enough) */
 	--accent: #b84a12;
 	--accent-dark: #8a370d;
+	/* Accent for text and links: at least 7:1 on every background, hover included (WCAG AAA) */
+	--accent-text: #8b380e;
 	/* Text on an accent-colored background */
 	--on-accent: #fff;
 	/* Neutral grays, matching the dark theme */
 	--black: 22, 22, 22;
-	--gray: 92, 92, 89;
+	/* Secondary text (dates, author, footer): 7:1 on white and on the hover surface */
+	--gray: 82, 82, 79;
 	--gray-light: 236, 236, 234;
 	--gray-dark: 43, 43, 41;
 	/* Page background and raised surfaces (header, menus) */
@@ -37,9 +40,10 @@
 	color-scheme: dark;
 	--accent: #f08a4b;
 	--accent-dark: #f6b38a;
+	--accent-text: #f2965e;
 	--on-accent: #161616;
 	--black: 245, 245, 243;
-	--gray: 170, 170, 168;
+	--gray: 173, 173, 171;
 	--gray-light: 48, 48, 46;
 	--gray-dark: 224, 224, 221;
 	--bg: #161616;
@@ -53,30 +57,47 @@
 		color-scheme: dark;
 		--accent: #f08a4b;
 		--accent-dark: #f6b38a;
+	--accent-text: #f2965e;
 		--on-accent: #161616;
 		--black: 245, 245, 243;
-		--gray: 170, 170, 168;
+		--gray: 173, 173, 171;
 		--gray-light: 48, 48, 46;
 		--gray-dark: 224, 224, 221;
 		--bg: #161616;
 		--surface: #20201f;
-	--hover-surface: #222221;
+		--hover-surface: #222221;
 		--box-shadow:
 			0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 50%), 0 16px 32px rgba(0, 0, 0, 50%);
 	}
 }
 @font-face {
 	font-family: "Atkinson";
-	src: url("/fonts/atkinson-regular.woff") format("woff");
+	/* Atkinson Hyperlegible (SIL Open Font License), Latin subset in WOFF2, from Fontsource */
+	src: url("/fonts/atkinson-regular.woff2") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Atkinson";
-	src: url("/fonts/atkinson-bold.woff") format("woff");
+	src: url("/fonts/atkinson-bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
+	font-display: swap;
+}
+/* True italics (otherwise the browser slants the regular font); only downloaded when used */
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-italic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-bold-italic.woff2") format("woff2");
+	font-weight: 700;
+	font-style: italic;
 	font-display: swap;
 }
 body {
@@ -109,6 +130,10 @@ h6 {
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--black));
 	line-height: 1.2;
+	/* Even line lengths in multi-line titles (no single orphan word) */
+	text-wrap: balance;
+	/* Linked headings (#section) don't end up under the top of the window */
+	scroll-margin-top: 1.5rem;
 }
 /* Major-third type scale (x1.25): 44 / 35 / 28 / 22.5 / 20px on desktop */
 h1 {
@@ -131,16 +156,16 @@ b {
 	font-weight: 700;
 }
 a {
-	color: var(--accent);
+	color: var(--accent-text);
 }
 a:hover {
-	color: var(--accent);
+	color: var(--accent-text);
 }
 /*
   Links inside articles: a thin, faint underline is always visible (links must not rely on
   color alone), and on hover a full underline draws from left to right.
 */
-.prose a:not(.tag) {
+.prose a:not(.tag, .heading-anchor) {
 	text-decoration: none;
 	background-image:
 		linear-gradient(currentColor, currentColor),
@@ -155,14 +180,19 @@ a:hover {
 	padding-bottom: 1px;
 	transition: background-size 0.25s ease-out;
 }
-.prose a:not(.tag):hover,
-.prose a:not(.tag):focus-visible {
+.prose a:not(.tag, .heading-anchor):hover,
+.prose a:not(.tag, .heading-anchor):focus-visible {
 	background-size:
 		100% 2px,
 		100% 1px;
 }
 p {
 	margin-bottom: 1em;
+}
+.prose p,
+.prose li {
+	/* Avoids a lonely last word and smooths ragged line endings */
+	text-wrap: pretty;
 }
 .prose p {
 	margin-bottom: 2em;
@@ -283,5 +313,81 @@ hr {
 	}
 	html {
 		scroll-behavior: auto;
+	}
+}
+
+/* Keyboard focus: one clear, consistent ring (mouse clicks don't show it) */
+:focus-visible {
+	outline: 2px solid var(--accent-text);
+	outline-offset: 2px;
+}
+::selection {
+	color: rgb(var(--black));
+	background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+/* On phones, long words in articles can break at syllables instead of overflowing */
+@media (max-width: 720px) {
+	.prose {
+		hyphens: auto;
+	}
+}
+/* Smooth jumps to #sections, only when motion isn't reduced */
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+/* Printing an article: just the text and images, black on white, with link addresses */
+@media print {
+	:root {
+		color-scheme: light;
+		--bg: #fff;
+		--black: 0, 0, 0;
+		--gray-dark: 0, 0, 0;
+		--gray: 60, 60, 60;
+	}
+	body {
+		font-size: 12pt;
+		background: #fff;
+	}
+	header,
+	footer,
+	.skip-link,
+	.reading-progress,
+	.copy-button,
+	.tag-list,
+	dialog {
+		display: none !important;
+	}
+	main {
+		width: auto;
+		max-width: none;
+		padding: 0;
+	}
+	.prose a[href^="http"]::after {
+		content: " (" attr(href) ")";
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+	}
+	/* Printers usually skip backgrounds: light code text would vanish on white paper */
+	pre.astro-code,
+	pre.astro-code span {
+		color: #000 !important;
+		background: #fff !important;
+	}
+	pre.astro-code {
+		border: 1px solid #999;
+	}
+	pre,
+	blockquote,
+	img,
+	table {
+		break-inside: avoid;
+	}
+	h1,
+	h2,
+	h3 {
+		break-after: avoid;
 	}
 }

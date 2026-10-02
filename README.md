@@ -98,6 +98,17 @@ Aggiungi `draft: true` all'intestazione per lavorare a un articolo senza pubblic
 
 C'è un articolo di esempio in bozza in `src/content/blog/esempio-post-con-immagini/` da usare come modello.
 
+### Cosa fa il sito da solo
+
+Non serve scrivere niente di speciale negli articoli per avere:
+
+- **tempo di lettura** stimato, accanto alla data;
+- **articolo precedente / successivo** in fondo a ogni articolo;
+- **link alle sezioni**: passando sopra un sottotitolo compare `#`, l'indirizzo diretto di quella sezione;
+- **foto ingrandibili** al clic e tasto **Copy** sui blocchi di codice;
+- **anteprime social** e **dati strutturati** per Google (titolo, date, autore, copertina, tag);
+- **versione stampabile** pulita (solo testo e immagini).
+
 ### Ricerca
 
 La ricerca (icona 🔍 in alto, oppure `Ctrl+K` / `⌘K` o il tasto `/`) usa [Pagefind](https://pagefind.app): l'indice viene creato automaticamente a ogni pubblicazione e la ricerca avviene nel browser, senza servizi esterni. Vengono indicizzati solo gli articoli pubblicati (titolo, testo e tag); le bozze no. Non c'è niente da fare a mano.

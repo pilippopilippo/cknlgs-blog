@@ -3,6 +3,7 @@
 // - click an image to open it full screen at its highest available resolution (it grows
 //   from its position on the page and shrinks back when closed)
 // - "Copy" button on every code block
+// - "#" link next to each section heading, to link straight to that section
 ---
 
 <!-- The preview <img> is created by the script, so the page never contains an image without src -->
@@ -28,6 +29,13 @@
 	const preview = document.createElement('img');
 	preview.alt = '';
 	dialog?.appendChild(preview);
+	// Visible close button (clicking anywhere or Esc also close it)
+	const closeButton = document.createElement('button');
+	closeButton.type = 'button';
+	closeButton.className = 'lightbox-close';
+	closeButton.setAttribute('aria-label', 'Close image');
+	closeButton.textContent = '×';
+	dialog?.appendChild(closeButton);
 
 	if (dialog && preview) {
 		const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -62,6 +70,7 @@
 				loader.src = full;
 			}
 			dialog.showModal();
+			closeButton.focus({ preventScroll: true });
 			// With reduced motion the image only fades in, without growing from its position
 			if (!reduceMotion.matches) {
 				preview.animate([{ transform: fromThumbnail() }, { transform: 'none' }], {
@@ -120,6 +129,15 @@
 				}
 			});
 		}
+	}
+
+	for (const heading of document.querySelectorAll<HTMLHeadingElement>('.prose :is(h2, h3, h4)[id]')) {
+		const anchor = document.createElement('a');
+		anchor.className = 'heading-anchor';
+		anchor.href = `#${heading.id}`;
+		anchor.setAttribute('aria-label', `Link to section: ${heading.textContent?.trim()}`);
+		anchor.textContent = '#';
+		heading.appendChild(anchor);
 	}
 
 	for (const pre of document.querySelectorAll<HTMLPreElement>('article pre')) {
@@ -195,6 +213,38 @@
 		border-radius: 0;
 		box-shadow: none;
 	}
+	.lightbox-close {
+		position: fixed;
+		top: 0.75rem;
+		right: 0.75rem;
+		width: 44px;
+		height: 44px;
+		font-size: 1.75rem;
+		line-height: 1;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.4);
+		border-radius: 50%;
+		cursor: pointer;
+	}
+	.heading-anchor {
+		margin-left: 0.3em;
+		font-weight: 400;
+		color: rgb(var(--gray));
+		text-decoration: none;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+	:is(h2, h3, h4):hover .heading-anchor,
+	.heading-anchor:focus-visible {
+		opacity: 1;
+	}
+	/* Touch screens have no hover: keep the link visible */
+	@media (hover: none) {
+		.heading-anchor {
+			opacity: 1;
+		}
+	}
 	.code-block {
 		position: relative;
 	}
@@ -205,16 +255,21 @@
 		padding: 0.25em 0.75em;
 		font: inherit;
 		font-size: 0.8em;
-		color: #e1e4e8;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.25);
+		color: #f0f3f6;
+		background: #2e2e2d;
+		border: 1px solid #5a5a58;
 		border-radius: 6px;
 		cursor: pointer;
-		opacity: 0.7;
-		transition: opacity 0.2s ease;
+		transition: border-color 0.2s ease;
 	}
 	.code-block:hover .copy-button,
 	.copy-button:focus-visible {
-		opacity: 1;
+		border-color: #8a8a87;
+	}
+	/* Invisible extension of the touch area to at least 44x44px (WCAG 2.5.5, AAA) */
+	.copy-button::after {
+		content: '';
+		position: absolute;
+		inset: -8px -4px;
 	}
 </style>
