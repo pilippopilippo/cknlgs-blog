@@ -1,0 +1,132 @@
+---
+// Article page extras:
+// - click an image to open it full screen at its highest available resolution
+// - "Copy" button on every code block
+---
+
+<dialog class="lightbox" aria-label="Image preview">
+	<img alt="" />
+</dialog>
+
+<script>
+	// Pick the widest candidate from srcset (the original resolution), falling back to src
+	function largestSource(img: HTMLImageElement): string {
+		let best = img.currentSrc || img.src;
+		let bestWidth = 0;
+		for (const candidate of img.srcset.split(',')) {
+			const [url, descriptor] = candidate.trim().split(/\s+/);
+			const width = parseInt(descriptor ?? '', 10);
+			if (url && width > bestWidth) {
+				best = url;
+				bestWidth = width;
+			}
+		}
+		return best;
+	}
+
+	const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
+	const preview = dialog?.querySelector('img');
+
+	if (dialog && preview) {
+		const open = (img: HTMLImageElement) => {
+			preview.src = largestSource(img);
+			preview.alt = img.alt;
+			dialog.showModal();
+		};
+		// Any click (on the image or the backdrop) closes it; Esc is handled by <dialog>
+		dialog.addEventListener('click', () => dialog.close());
+		dialog.addEventListener('close', () => preview.removeAttribute('src'));
+
+		for (const img of document.querySelectorAll<HTMLImageElement>('article img')) {
+			img.classList.add('zoomable');
+			img.tabIndex = 0;
+			img.setAttribute('role', 'button');
+			img.addEventListener('click', () => open(img));
+			img.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					open(img);
+				}
+			});
+		}
+	}
+
+	for (const pre of document.querySelectorAll<HTMLPreElement>('article pre')) {
+		// Wrap the block so the button stays put when the code scrolls horizontally
+		const wrapper = document.createElement('div');
+		wrapper.className = 'code-block';
+		pre.replaceWith(wrapper);
+		wrapper.appendChild(pre);
+
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'copy-button';
+		button.textContent = 'Copy';
+		button.addEventListener('click', async () => {
+			const text = (pre.querySelector('code') ?? pre).textContent ?? '';
+			try {
+				await navigator.clipboard.writeText(text);
+				button.textContent = 'Copied!';
+			} catch {
+				button.textContent = 'Error';
+			}
+			setTimeout(() => (button.textContent = 'Copy'), 2000);
+		});
+		wrapper.appendChild(button);
+	}
+</script>
+
+<style is:global>
+	article img.zoomable {
+		cursor: zoom-in;
+	}
+	dialog.lightbox {
+		max-width: 100vw;
+		max-height: 100vh;
+		width: 100vw;
+		height: 100vh;
+		margin: 0;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: zoom-out;
+	}
+	dialog.lightbox[open] {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	dialog.lightbox::backdrop {
+		background: rgba(0, 0, 0, 0.85);
+	}
+	dialog.lightbox img {
+		max-width: 95vw;
+		max-height: 95vh;
+		width: auto;
+		height: auto;
+		border-radius: 0;
+		box-shadow: none;
+	}
+	.code-block {
+		position: relative;
+	}
+	.copy-button {
+		position: absolute;
+		top: 0.5em;
+		right: 0.5em;
+		padding: 0.25em 0.75em;
+		font: inherit;
+		font-size: 0.8em;
+		color: #e1e4e8;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		border-radius: 6px;
+		cursor: pointer;
+		opacity: 0.7;
+		transition: opacity 0.2s ease;
+	}
+	.code-block:hover .copy-button,
+	.copy-button:focus-visible {
+		opacity: 1;
+	}
+</style>
