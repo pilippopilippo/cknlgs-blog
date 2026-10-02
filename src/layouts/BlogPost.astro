@@ -6,14 +6,26 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import PostEnhancements from '../components/PostEnhancements.astro';
+import TagList from '../components/TagList.astro';
+import { tagSlug } from '../utils/posts';
 import { SITE_DESCRIPTION } from '../consts';
 
 type PostData = CollectionEntry<'blog'>['data'];
 // Date and description are optional so standalone pages (e.g. About) can use this layout too
-type Props = Omit<PostData, 'draft' | 'pubDate' | 'description'> &
-	Partial<Pick<PostData, 'pubDate' | 'description'>>;
+type Props = Omit<PostData, 'draft' | 'pubDate' | 'description' | 'tags'> &
+	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags'>>;
 
-const { title, description = SITE_DESCRIPTION, pubDate, updatedDate, heroImage } = Astro.props;
+const {
+	title,
+	description = SITE_DESCRIPTION,
+	pubDate,
+	updatedDate,
+	heroImage,
+	tags = [],
+} = Astro.props;
+const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entries()]
+	.filter(([slug]) => slug)
+	.map(([slug, label]) => ({ slug, label }));
 ---
 
 <html lang="en">
@@ -50,6 +62,9 @@ const { title, description = SITE_DESCRIPTION, pubDate, updatedDate, heroImage }
 			.title h1 {
 				margin: 0 0 0.5em 0;
 			}
+			.title :global(.tag-list) {
+				margin-bottom: 1em;
+			}
 			.date {
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
@@ -82,6 +97,7 @@ const { title, description = SITE_DESCRIPTION, pubDate, updatedDate, heroImage }
 							)
 						}
 						<h1>{title}</h1>
+						<TagList tags={tagLinks} />
 						<hr />
 					</div>
 					<slot />

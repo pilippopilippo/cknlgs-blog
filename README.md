@@ -33,6 +33,7 @@ title: "Viaggio a Lisbona"
 description: "Tre giorni tra tram gialli e pastéis de nata."
 pubDate: "2026-10-15"
 heroImage: "./copertina.jpg"
+tags: ["viaggi", "portogallo"]
 ---
 
 Qui inizia il testo dell'articolo.
@@ -45,6 +46,7 @@ Qui inizia il testo dell'articolo.
 | `pubDate`     | sì           | Data di pubblicazione, nel formato `AAAA-MM-GG` |
 | `updatedDate` | no           | Data dell'ultimo aggiornamento, se lo modifichi in seguito |
 | `heroImage`   | no           | Immagine di copertina: compare in home, in cima all'articolo e nelle anteprime social |
+| `tags`        | no           | Argomenti dell'articolo, tra parentesi quadre e separati da virgole (vedi [Tag](#tag)) |
 | `draft`       | no           | `true` per tenerlo nascosto (bozza); se manca, l'articolo è pubblicato |
 
 > I testi tra virgolette possono contenere qualsiasi carattere. Se un titolo contiene a sua volta delle virgolette, usa quelle singole fuori: `title: 'Il "grande" viaggio'`.
@@ -73,6 +75,18 @@ Fai arrivare le modifiche su `main` (con un commit da GitHub o dal tuo computer)
 2. *Add file → Create new file* e scrivi come nome `viaggio-a-lisbona/index.md`: la `/` crea la cartella.
 3. Incolla il testo e fai *Commit changes*.
 4. Entra nella nuova cartella e usa *Add file → Upload files* per caricare le immagini.
+
+### Tag
+
+```md
+tags: ["viaggi", "cucina italiana", "portogallo"]
+```
+
+- Ogni tag ha la sua pagina con tutti gli articoli che lo usano, es. `cknlgs.cc/tags/viaggi/`. La pagina **Tags** nel menu li elenca tutti con il numero di articoli.
+- In home, i tag in alto filtrano subito l'elenco senza cambiare pagina; il filtro resta nell'indirizzo (es. `cknlgs.cc/?tag=viaggi`) e si può condividere.
+- Maiuscole e accenti non creano tag doppi: `Viaggi` e `viaggi` sono lo stesso tag, come `Città` e `citta`. Conviene comunque scriverli sempre allo stesso modo, perché il nome mostrato è quello usato nell'articolo.
+- Gli spazi sono ammessi: nell'indirizzo diventano trattini (`cucina italiana` → `/tags/cucina-italiana/`).
+- Un tag compare solo quando almeno un articolo pubblicato lo usa (le bozze non contano).
 
 ### Bozze
 
@@ -194,9 +208,10 @@ Il messaggio indica sempre il nome della cartella dell'articolo con il problema 
 ```
 src/
 ├── content/blog/      ← gli articoli (una cartella ciascuno)
-├── pages/             ← pagine fisse: home (index.astro), about.astro, feed RSS
+├── pages/             ← pagine: home (index.astro), about.astro, tags/, feed RSS
+├── utils/posts.ts     ← elenco articoli pubblicati e gestione dei tag
 ├── layouts/           ← impaginazione degli articoli
-├── components/        ← intestazione, piè di pagina, tasto Copy e zoom immagini
+├── components/        ← intestazione, piè di pagina, elenco articoli, tag, tasto Copy e zoom immagini
 ├── styles/global.css  ← stile generale
 └── consts.ts          ← nome e descrizione del sito
 public/                ← file serviti così come sono (favicon, font)
