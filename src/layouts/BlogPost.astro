@@ -62,6 +62,26 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				line-height: 1.15;
+			}
+			/*
+			  Comfortable line length: text stops at 36rem / 576px (about 72-75 characters per line,
+			  within the recommended 50-75); images keep the full column width (720px).
+			*/
+			.prose > :global(*:not(.title, p:has(> img))) {
+				/* rem, not em: headings have a larger font-size and would get a wider measure */
+				max-width: 36rem;
+				/* Include list indentation in the width so lists line up with paragraphs */
+				box-sizing: border-box;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			@media (max-width: 720px) {
+				/* Smaller side margins on phones: ~18px instead of ~36px */
+				.prose {
+					max-width: 100%;
+					padding: 1em 0;
+				}
 			}
 			.title :global(.tag-list) {
 				margin-bottom: 1em;
