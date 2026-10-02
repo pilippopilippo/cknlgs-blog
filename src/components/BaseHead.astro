@@ -30,6 +30,27 @@ const socialImageURL = new URL(socialImage.src, Astro.url);
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
+<!-- Apply the theme before the page is painted (no flash of the wrong theme):
+     the visitor's saved choice if any, otherwise the device setting -->
+<script is:inline>
+	(() => {
+		const media = matchMedia('(prefers-color-scheme: dark)');
+		const saved = () => {
+			try {
+				return localStorage.getItem('theme');
+			} catch {
+				return null;
+			}
+		};
+		const apply = () => {
+			const theme = saved();
+			document.documentElement.dataset.theme =
+				theme === 'dark' || theme === 'light' ? theme : media.matches ? 'dark' : 'light';
+		};
+		apply();
+		media.addEventListener('change', apply);
+	})();
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
