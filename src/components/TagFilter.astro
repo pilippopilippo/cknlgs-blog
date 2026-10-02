@@ -61,14 +61,23 @@ const { tags } = Astro.props;
 	for (const button of buttons) {
 		button.addEventListener('click', () => select(button.dataset.tag ?? ''));
 	}
+	// On phones the bar is hidden (see CSS), so a ?tag= link shows the full list instead of
+	// a filtered one with no visible way back to "All"
+	const barVisible = !matchMedia('(max-width: 720px)').matches;
 	const initial = new URLSearchParams(location.search).get('tag');
-	if (initial) select(initial);
+	if (initial && barVisible) select(initial);
 </script>
 
 <style>
 	.tag-filter {
 		margin-bottom: 2rem;
 		text-align: center;
+	}
+	/* On phones the tag bar is hidden: tags are reachable from "Tags" in the hamburger menu */
+	@media (max-width: 720px) {
+		.tag-filter {
+			display: none;
+		}
 	}
 	.all-tags {
 		display: inline-block;
