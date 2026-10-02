@@ -1,5 +1,6 @@
 ---
 import HeaderLink from './HeaderLink.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
@@ -21,6 +22,9 @@ import { SITE_TITLE } from '../consts';
 			<HeaderLink href="/">Blog</HeaderLink>
 			<HeaderLink href="/tags">Tags</HeaderLink>
 			<HeaderLink href="/about">About me</HeaderLink>
+		</div>
+		<div class="actions">
+			<ThemeToggle />
 		</div>
 	</nav>
 </header>
@@ -63,8 +67,8 @@ import { SITE_TITLE } from '../consts';
 		z-index: 10;
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		background: var(--surface);
+		box-shadow: 0 2px 8px rgba(var(--shadow), 5%);
 	}
 	h2 {
 		margin: 0;
@@ -80,8 +84,18 @@ import { SITE_TITLE } from '../consts';
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
 	}
+	h2 {
+		grid-column: 1;
+		grid-row: 1;
+	}
 	.internal-links {
 		grid-column: 2;
+		grid-row: 1;
+	}
+	.actions {
+		grid-column: 3;
+		grid-row: 1;
+		justify-self: end;
 	}
 	nav a {
 		padding: 1em 0.5em;
@@ -99,7 +113,14 @@ import { SITE_TITLE } from '../consts';
 
 	@media (max-width: 720px) {
 		.has-menu nav {
-			grid-template-columns: 1fr auto;
+			grid-template-columns: 1fr auto auto;
+		}
+		.has-menu .actions {
+			grid-column: 2;
+		}
+		.has-menu .menu-toggle {
+			grid-column: 3;
+			grid-row: 1;
 		}
 		.has-menu h2 {
 			padding: 1em 0;
@@ -148,8 +169,8 @@ import { SITE_TITLE } from '../consts';
 			right: 0;
 			flex-direction: column;
 			padding: 0.5em 0;
-			background: white;
-			box-shadow: 0 8px 16px rgba(var(--black), 8%);
+			background: var(--surface);
+			box-shadow: 0 8px 16px rgba(var(--shadow), 8%);
 		}
 		.menu-open .internal-links {
 			display: flex;
