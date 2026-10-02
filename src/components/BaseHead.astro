@@ -10,11 +10,12 @@ interface Props {
 	description: string;
 	// A local image (e.g. a post's cover) or a path in public/
 	image?: ImageMetadata | string;
+	author?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const { title, description, image = '/blog-placeholder-1.jpg', author } = Astro.props;
 
 // Social previews: cover images are cropped to the recommended 1200x630 and saved as JPG,
 // which every platform (Facebook, WhatsApp, X, Telegram...) can display
@@ -44,6 +45,7 @@ const socialImageURL = new URL(socialImage.src, Astro.url);
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+{author && <meta name="author" content={author} />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />

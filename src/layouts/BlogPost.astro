@@ -22,6 +22,7 @@ const {
 	updatedDate,
 	heroImage,
 	tags = [],
+	author,
 } = Astro.props;
 const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entries()]
 	.filter(([slug]) => slug)
@@ -30,7 +31,7 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} image={heroImage} />
+		<BaseHead title={title} description={description} image={heroImage} author={author} />
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -88,6 +89,7 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 							pubDate && (
 								<div class="date">
 									<FormattedDate date={pubDate} />
+									{author && <span class="author"> · by {author}</span>}
 									{updatedDate && (
 										<div class="last-updated-on">
 											Last updated on <FormattedDate date={updatedDate} />

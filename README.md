@@ -32,6 +32,7 @@ Il file inizia sempre con questo blocco tra `---`:
 title: "Viaggio a Lisbona"
 description: "Tre giorni tra tram gialli e pastéis de nata."
 pubDate: "2026-10-15"
+author: "Mario Rossi"
 heroImage: "./copertina.jpg"
 tags: ["viaggi", "portogallo"]
 ---
@@ -45,6 +46,7 @@ Qui inizia il testo dell'articolo.
 | `description` | sì           | Breve riassunto: compare su Google e nelle anteprime quando condividi il link |
 | `pubDate`     | sì           | Data di pubblicazione, nel formato `AAAA-MM-GG` |
 | `updatedDate` | no           | Data dell'ultimo aggiornamento, se lo modifichi in seguito |
+| `author`      | no           | Nome dell'autore: compare accanto alla data, nell'articolo e in home. Se manca non viene mostrato nessun nome |
 | `heroImage`   | no           | Immagine di copertina: compare in home, in cima all'articolo e nelle anteprime social |
 | `tags`        | no           | Argomenti dell'articolo, tra parentesi quadre e separati da virgole (vedi [Tag](#tag)) |
 | `draft`       | no           | `true` per tenerlo nascosto (bozza); se manca, l'articolo è pubblicato |
