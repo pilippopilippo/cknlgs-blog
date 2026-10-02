@@ -62,27 +62,26 @@
 				loader.src = full;
 			}
 			dialog.showModal();
+			// With reduced motion the image only fades in, without growing from its position
 			if (!reduceMotion.matches) {
 				preview.animate([{ transform: fromThumbnail() }, { transform: 'none' }], {
 					duration,
 					easing: 'cubic-bezier(0.2, 0, 0, 1)',
 				});
-				dialog.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: 'ease-out' });
 			}
+			dialog.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: 'ease-out' });
 		};
 
 		const close = () => {
 			if (!dialog.open || dialog.classList.contains('closing')) return;
-			if (reduceMotion.matches) {
-				dialog.close();
-				return;
-			}
 			dialog.classList.add('closing');
-			preview.animate([{ transform: 'none' }, { transform: fromThumbnail() }], {
-				duration: 200,
-				easing: 'cubic-bezier(0.4, 0, 1, 1)',
-				fill: 'forwards',
-			});
+			if (!reduceMotion.matches) {
+				preview.animate([{ transform: 'none' }, { transform: fromThumbnail() }], {
+					duration: 200,
+					easing: 'cubic-bezier(0.4, 0, 1, 1)',
+					fill: 'forwards',
+				});
+			}
 			dialog
 				.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in', fill: 'forwards' })
 				.finished.then(() => {

@@ -1,11 +1,13 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import Search from './Search.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
 <a class="skip-link" href="#main">Skip to content</a>
-<header>
+<!-- The site interface is in English even on pages written in another language -->
+<header lang="en">
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<button
@@ -25,6 +27,7 @@ import { SITE_TITLE } from '../consts';
 			<HeaderLink href="/about">About me</HeaderLink>
 		</div>
 		<div class="actions">
+			<Search />
 			<ThemeToggle />
 		</div>
 	</nav>
@@ -115,6 +118,8 @@ import { SITE_TITLE } from '../consts';
 		grid-column: 3;
 		grid-row: 1;
 		justify-self: end;
+		display: flex;
+		align-items: center;
 	}
 	nav a {
 		padding: 1em 0.5em;

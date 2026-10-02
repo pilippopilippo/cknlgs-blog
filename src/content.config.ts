@@ -17,6 +17,8 @@ const blog = defineCollection({
 			heroImage: image().optional(),
 			// Name of whoever wrote the post (optional, no default)
 			author: z.string().trim().min(1).optional(),
+			// Language of the post, e.g. "it" (default: English) — read aloud correctly by screen readers
+			lang: z.string().trim().min(2).default("en"),
 			// Topics, e.g. ["viaggi", "cucina"]; case and accents are normalized in URLs
 			tags: z.array(z.string().trim().toLowerCase().min(1)).default([]),
 			// Draft posts are excluded from the home page, post routes and RSS feed

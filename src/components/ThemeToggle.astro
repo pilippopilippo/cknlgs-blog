@@ -35,7 +35,6 @@
 	if (button) {
 		button.hidden = false;
 		button.setAttribute('aria-label', label());
-		const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 		button.addEventListener('click', () => {
 			const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
 			const apply = () => {
@@ -47,11 +46,12 @@
 			} catch {
 				// Storage unavailable (e.g. private mode): the choice lasts for this page only
 			}
-			if (reduceMotion.matches || !document.startViewTransition) {
+			if (!document.startViewTransition) {
 				apply();
 				return;
 			}
 			// Cross-fade the whole page between the two themes, and spin the icon in
+			// (with reduced motion the icon only fades in, see CSS)
 			root.classList.add('theme-switching');
 			document.startViewTransition(apply).finished.finally(() => {
 				root.classList.remove('theme-switching');
@@ -99,6 +99,16 @@
 	}
 	:global(.theme-switching) .theme-toggle svg {
 		animation: icon-spin-in 0.35s ease-out;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:global(.theme-switching) .theme-toggle svg {
+			animation-name: icon-fade-in;
+		}
+	}
+	@keyframes icon-fade-in {
+		from {
+			opacity: 0;
+		}
 	}
 	@keyframes icon-spin-in {
 		from {

@@ -47,6 +47,7 @@ Qui inizia il testo dell'articolo.
 | `pubDate`     | sì           | Data di pubblicazione, nel formato `AAAA-MM-GG` |
 | `updatedDate` | no           | Data dell'ultimo aggiornamento, se lo modifichi in seguito |
 | `author`      | no           | Nome dell'autore: compare accanto alla data, nell'articolo e in home. Se manca non viene mostrato nessun nome |
+| `lang`        | no           | Lingua dell'articolo, es. `"it"` per l'italiano (se manca: inglese). Serve ai lettori di schermo per pronunciarlo correttamente |
 | `heroImage`   | no           | Immagine di copertina: compare in home, in cima all'articolo e nelle anteprime social |
 | `tags`        | no           | Argomenti dell'articolo, tra parentesi quadre e separati da virgole (vedi [Tag](#tag)) |
 | `draft`       | no           | `true` per tenerlo nascosto (bozza); se manca, l'articolo è pubblicato |
@@ -96,6 +97,12 @@ Aggiungi `draft: true` all'intestazione per lavorare a un articolo senza pubblic
 > Le immagini di una bozza vengono comunque caricate sul sito con un nome casuale, senza essere collegate da nessuna pagina: non mettere in bozza foto che non devono finire online.
 
 C'è un articolo di esempio in bozza in `src/content/blog/esempio-post-con-immagini/` da usare come modello.
+
+### Ricerca
+
+La ricerca (icona 🔍 in alto, oppure `Ctrl+K` / `⌘K` o il tasto `/`) usa [Pagefind](https://pagefind.app): l'indice viene creato automaticamente a ogni pubblicazione e la ricerca avviene nel browser, senza servizi esterni. Vengono indicizzati solo gli articoli pubblicati (titolo, testo e tag); le bozze no. Non c'è niente da fare a mano.
+
+In locale la ricerca funziona con `npm run preview`, non con `npm run dev` (l'indice esiste solo dopo la build).
 
 ---
 
@@ -185,7 +192,8 @@ Serve [Node.js](https://nodejs.org) 22.12 o più recente.
 | ----------------- | ------- |
 | `npm install`     | Installa le dipendenze (la prima volta) |
 | `npm run dev`     | Avvia il sito in locale su `http://localhost:4321`, con aggiornamento automatico mentre scrivi |
-| `npm run build`   | Genera il sito come verrà pubblicato, utile per scoprire errori prima di pubblicare |
+| `npm run build`   | Genera il sito come verrà pubblicato (e l'indice di ricerca), utile per scoprire errori prima di pubblicare |
+| `npm run preview` | Build e anteprima locale identica al sito pubblicato, ricerca compresa |
 | `npm run check`   | Build più controlli completi, come fa Cloudflare |
 
 In locale le bozze non si vedono: per un'anteprima togli temporaneamente `draft: true`.
