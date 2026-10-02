@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import FormattedDate from './FormattedDate.astro';
 import TagList from './TagList.astro';
-import { type Post, coverTransitionName, postTags } from '../utils/posts';
+import { type Post, coverTransitionName, postTags, readingMinutes } from '../utils/posts';
 
 interface Props {
 	posts: Post[];
@@ -33,6 +33,7 @@ const { posts } = Astro.props;
 						<h2 class="title">{post.data.title}</h2>
 						<p class="date">
 							<FormattedDate date={post.data.pubDate} />
+							<span> · {readingMinutes(post)} min read</span>
 							{post.data.author && <span> · by {post.data.author}</span>}
 						</p>
 					</a>
@@ -174,7 +175,7 @@ const { posts } = Astro.props;
 		color: rgb(var(--gray));
 	}
 	ul li a:hover .title {
-		color: var(--accent);
+		color: var(--accent-text);
 	}
 	.empty {
 		text-align: center;

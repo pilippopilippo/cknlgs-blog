@@ -18,6 +18,10 @@ export default defineConfig({
 	// The site's CSS is small: inline it in each page instead of separate render-blocking files
 	build: { inlineStylesheets: "always" },
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		// GitHub's high-contrast dark theme: every syntax color is at least 7:1 on the code background (WCAG AAA)
+		shikiConfig: { theme: "github-dark-high-contrast" },
+	},
 	// Generate several sizes of each image so phones download smaller files
 	image: { layout: "constrained" },
 	vite: {

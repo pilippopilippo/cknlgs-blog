@@ -17,6 +17,11 @@ type Props = Omit<PostData, 'draft' | 'pubDate' | 'description' | 'tags' | 'lang
 	Partial<Pick<PostData, 'pubDate' | 'description' | 'tags' | 'lang'>> & {
 		/** Post id, used to link the cover image to its card on the home page */
 		postId?: string;
+		/** Estimated reading time in minutes */
+		readingTime?: number;
+		/** Links to the neighbouring posts, shown at the end of the article */
+		newer?: { title: string; url: string };
+		older?: { title: string; url: string };
 	};
 
 const {
@@ -29,6 +34,9 @@ const {
 	author,
 	postId,
 	lang = 'en',
+	readingTime,
+	newer,
+	older,
 } = Astro.props;
 // Search index (Pagefind): only articles are indexed, with their date for the results
 const searchDate = pubDate?.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -45,6 +53,9 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 			image={heroImage}
 			author={author}
 			publishedTime={postId ? pubDate : undefined}
+			modifiedTime={postId ? updatedDate : undefined}
+			tags={postId ? tags : undefined}
+			lang={lang}
 		/>
 		<style>
 			main {
@@ -104,6 +115,53 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
 			}
+			/* Previous / next post at the end of the article */
+			.post-nav {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+				max-width: 36rem;
+				margin: 3rem auto 0;
+				padding: 1.5rem 0 0;
+				border-top: 1px solid rgb(var(--gray-light));
+			}
+			.post-nav a {
+				display: flex;
+				flex-direction: column;
+				gap: 0.15em;
+				padding: 0.75rem 1rem;
+				text-decoration: none;
+				border-radius: 12px;
+				transition: background-color 0.2s ease;
+			}
+			.post-nav a:hover {
+				background: var(--hover-surface);
+			}
+			.post-nav .newer {
+				grid-column: 2;
+				text-align: right;
+			}
+			.post-nav-label {
+				font-size: 0.8em;
+				color: rgb(var(--gray));
+			}
+			.post-nav-title {
+				font-weight: 700;
+				line-height: 1.3;
+				color: rgb(var(--black));
+			}
+			.post-nav a:hover .post-nav-title {
+				color: var(--accent-text);
+			}
+			@media (max-width: 720px) {
+				.post-nav {
+					grid-template-columns: 1fr;
+					gap: 0.25rem;
+				}
+				.post-nav .newer {
+					grid-column: 1;
+				}
+			}
 			.last-updated-on {
 				font-style: italic;
 			}
@@ -138,6 +196,7 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 							pubDate && (
 								<div class="date" lang="en" data-pagefind-ignore>
 									<FormattedDate date={pubDate} />
+									{readingTime && <span> · {readingTime} min read</span>}
 									{author && <span class="author"> · by {author}</span>}
 									{updatedDate && (
 										<div class="last-updated-on">
@@ -153,6 +212,24 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 					</div>
 					<slot />
 				</div>
+				{
+					(newer || older) && (
+						<nav class="post-nav" aria-label="More posts" lang="en" data-pagefind-ignore>
+							{older && (
+								<a class="older" href={older.url} rel="prev">
+									<span class="post-nav-label">← Previous post</span>
+									<span class="post-nav-title">{older.title}</span>
+								</a>
+							)}
+							{newer && (
+								<a class="newer" href={newer.url} rel="next">
+									<span class="post-nav-label">Next post →</span>
+									<span class="post-nav-title">{newer.title}</span>
+								</a>
+							)}
+						</nav>
+					)
+				}
 			</article>
 		</main>
 		<Footer />

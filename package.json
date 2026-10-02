@@ -9,6 +9,7 @@
 		"typescript": "5.9.3"
 	},
 	"devDependencies": {
+		"@astrojs/check": "0.9.10",
 		"pagefind": "1.5.2",
 		"wrangler": "4.146.0"
 	},
@@ -20,7 +21,7 @@
 		"astro": "astro",
 		"build": "astro build && pagefind --site dist/client --force-language en",
 		"cf-typegen": "wrangler types",
-		"check": "npm run build && tsc && wrangler deploy --dry-run",
+		"check": "astro check && npm run build && tsc && wrangler deploy --dry-run",
 		"deploy": "wrangler deploy",
 		"dev": "astro dev",
 		"preview": "npm run build && wrangler dev"
