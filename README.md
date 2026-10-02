@@ -85,7 +85,7 @@ tags: ["viaggi", "cucina italiana", "portogallo"]
 ```
 
 - Ogni tag ha la sua pagina con tutti gli articoli che lo usano, es. `cknlgs.cc/tags/viaggi/`. La pagina **Tags** nel menu li elenca tutti con il numero di articoli.
-- In home, i tag in alto filtrano subito l'elenco senza cambiare pagina; il filtro resta nell'indirizzo (es. `cknlgs.cc/?tag=viaggi`) e si può condividere.
+- Su computer, in home, i tag in alto filtrano subito l'elenco senza cambiare pagina; il filtro resta nell'indirizzo (es. `cknlgs.cc/?tag=viaggi`) e si può condividere. Su telefono la barra è nascosta: i tag si raggiungono da **Tags** nel menu ☰.
 - Maiuscole e accenti non creano tag doppi: `Viaggi` e `viaggi` sono lo stesso tag, come `Città` e `citta`. Conviene comunque scriverli sempre allo stesso modo, perché il nome mostrato è quello usato nell'articolo.
 - Gli spazi sono ammessi: nell'indirizzo diventano trattini (`cucina italiana` → `/tags/cucina-italiana/`).
 - Un tag compare solo quando almeno un articolo pubblicato lo usa (le bozze non contano).
