@@ -6,19 +6,21 @@
 
 :root {
 	color-scheme: light;
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
+	/* Same hue as the dark theme's lilac, darker for contrast on white (7:1) */
+	--accent: #4f42c9;
+	--accent-dark: #2f2685;
 	/* Text on an accent-colored background */
 	--on-accent: #fff;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
+	/* Neutral grays, matching the dark theme */
+	--black: 22, 22, 22;
+	--gray: 92, 92, 89;
+	--gray-light: 236, 236, 234;
+	--gray-dark: 43, 43, 41;
 	/* Page background and raised surfaces (header, menus) */
 	--bg: #fff;
 	--surface: #fff;
 	/* Shadows stay dark in both themes */
-	--shadow: 15, 18, 25;
+	--shadow: 22, 22, 22;
 	--gray-gradient: rgba(var(--gray-light), 50%), var(--bg);
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
@@ -36,7 +38,7 @@
 	--accent-dark: #c9c3f2;
 	--on-accent: #1d1647;
 	--black: 245, 245, 243;
-	--gray: 158, 158, 156;
+	--gray: 170, 170, 168;
 	--gray-light: 48, 48, 46;
 	--gray-dark: 224, 224, 221;
 	--bg: #161616;
@@ -51,7 +53,7 @@
 		--accent-dark: #c9c3f2;
 		--on-accent: #1d1647;
 		--black: 245, 245, 243;
-		--gray: 158, 158, 156;
+		--gray: 170, 170, 168;
 		--gray-light: 48, 48, 46;
 		--gray-dark: 224, 224, 221;
 		--bg: #161616;
@@ -199,12 +201,7 @@ hr {
 	white-space: nowrap;
 }
 
-/* Code blocks: in the dark theme use the neutral surface gray instead of the highlighter's blue-gray */
-:root[data-theme="dark"] .astro-code {
-	background-color: var(--surface) !important;
-}
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme]) .astro-code {
-		background-color: var(--surface) !important;
-	}
+/* Code blocks: neutral dark gray in both themes instead of the highlighter's blue-gray */
+.astro-code {
+	background-color: #20201f !important;
 }
