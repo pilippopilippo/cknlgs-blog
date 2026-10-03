@@ -150,7 +150,7 @@
 					(result) => `
 					<li>
 						<a href="${result.url}">
-							${thumbnails[result.url] ? `<img src="${thumbnails[result.url]}" alt="" loading="lazy" width="96" height="48" />` : ''}
+							${thumbnails[result.url] ? `<img src="${escapeHTML(thumbnails[result.url])}" alt="" loading="lazy" width="96" height="48" />` : ''}
 							<span class="result-text">
 								<span class="result-title">${escapeHTML(result.meta.title ?? result.url)}</span>
 								${result.meta.date ? `<span class="result-date">${escapeHTML(result.meta.date)}</span>` : ''}

@@ -20,9 +20,11 @@ site_url: https://cknlgs.cc
 logo:
   src: /favicon.svg
 
-# Required by the CMS, but posts keep their images in their own folder (see the collection below)
-media_folder: public/images
-public_folder: /images
+# Shared images ("Global Assets" in the image picker). Posts keep their own images in their folder
+# (see the collection below); this folder is for images used by several posts. The "@assets" alias
+# (tsconfig.json) lets Astro find and optimize them, as a "/images/..." path in public/ would not be
+media_folder: src/assets/images
+public_folder: "@assets/images"
 
 media_libraries:
   default:
@@ -37,6 +39,11 @@ media_libraries:
           height: 2560
       # "IMG 1234.HEIC" becomes "img-1234.webp"
       slugify_filename: true
+  # Free stock photos, saved as links: the site downloads and optimizes them when it's built, from
+  # the hosts listed in src/utils/remote-images.mjs. Pixabay and Picsum are left out:
+  # Pixabay links expire after a day, which would break later builds
+  stock_assets:
+    providers: [unsplash, pexels]
 
 # Addresses and file names: lowercase, no accents, hyphens instead of spaces
 slug:

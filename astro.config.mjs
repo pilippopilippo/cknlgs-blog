@@ -4,6 +4,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
 import cloudflare from "@astrojs/cloudflare";
+import { remoteImageHosts } from "./src/utils/remote-images.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,7 +28,12 @@ export default defineConfig({
 		shikiConfig: { theme: "github-dark-high-contrast" },
 	},
 	// Generate several sizes of each image so phones download smaller files
-	image: { layout: "constrained" },
+	image: {
+		layout: "constrained",
+		// Stock photos chosen in the writing panel (/admin/) are saved as links: their hosts are
+		// downloaded at build time and optimized like local images
+		remotePatterns: remoteImageHosts.map((hostname) => ({ protocol: "https", hostname })),
+	},
 	vite: {
 		// Keep CSS readable by older browsers (e.g. iOS < 16.4 doesn't support media query range syntax)
 		build: { cssTarget: ["safari14", "chrome90", "firefox90"] },

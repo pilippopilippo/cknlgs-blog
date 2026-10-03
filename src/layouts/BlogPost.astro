@@ -8,7 +8,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import PostEnhancements from '../components/PostEnhancements.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TagList from '../components/TagList.astro';
-import { coverTransitionName, tagSlug } from '../utils/posts';
+import { coverTransitionName, isOptimizableRemoteImage, isRemoteImage, tagSlug } from '../utils/posts';
 import { SITE_DESCRIPTION } from '../consts';
 
 type PostData = CollectionEntry<'blog'>['data'];
@@ -178,16 +178,29 @@ const tagLinks = [...new Map(tags.map((label) => [tagSlug(label), label])).entri
 			>
 				<div class="hero-image">
 					{
-						heroImage && (
-							<Image
-								width={1020}
-								src={heroImage}
-								alt=""
-								loading="eager"
-								fetchpriority="high"
-								style={postId ? `view-transition-name: ${coverTransitionName(postId)}` : undefined}
-							/>
-						)
+						heroImage &&
+							(isRemoteImage(heroImage) && !isOptimizableRemoteImage(heroImage) ? (
+								// A remote image from a host that isn't allowed is shown as it is
+								<img
+									src={heroImage}
+									width={1020}
+									alt=""
+									loading="eager"
+									fetchpriority="high"
+									decoding="async"
+									style={postId ? `view-transition-name: ${coverTransitionName(postId)}` : undefined}
+								/>
+							) : (
+								<Image
+									width={1020}
+									src={heroImage}
+									inferSize={isRemoteImage(heroImage) || undefined}
+									alt=""
+									loading="eager"
+									fetchpriority="high"
+									style={postId ? `view-transition-name: ${coverTransitionName(postId)}` : undefined}
+								/>
+							))
 					}
 				</div>
 				<div class="prose">
