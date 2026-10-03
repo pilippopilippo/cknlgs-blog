@@ -1,0 +1,152 @@
+# Settings of the writing panel at /admin/ (Sveltia CMS).
+# The fields mirror the post schema in src/content.config.ts: keep the two in sync.
+
+backend:
+  name: github
+  repo: pilippopilippo/cknlgs-blog
+  branch: main
+  # Sign in with a GitHub personal access token (see the README): signing in with the GitHub
+  # button would need a separate OAuth server
+  auth_methods: [token]
+  commit_messages:
+    create: "Nuovo articolo: {{slug}}"
+    update: "Modifica articolo: {{slug}}"
+    delete: "Elimina articolo: {{slug}}"
+    uploadMedia: "Carica {{path}}"
+    deleteMedia: "Elimina {{path}}"
+
+app_title: CKNLGSCKNLGS
+site_url: https://cknlgs.cc
+logo:
+  src: /favicon.svg
+
+# Required by the CMS, but posts keep their images in their own folder (see the collection below)
+media_folder: public/images
+public_folder: /images
+
+media_libraries:
+  default:
+    config:
+      # Photos straight from the phone (including iPhone HEIC) are shrunk and converted to WebP in the
+      # browser before being uploaded: smaller repository, and the location data in the photo is removed
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2560
+          height: 2560
+      # "IMG 1234.HEIC" becomes "img-1234.webp"
+      slugify_filename: true
+
+# Addresses and file names: lowercase, no accents, hyphens instead of spaces
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+  maxlength: 80
+
+output:
+  # An empty optional field (author, cover, update date...) is left out of the file instead of being
+  # written as an empty value, which the post schema would reject
+  omit_empty_optional_fields: true
+
+collections:
+  - name: blog
+    label: Articoli
+    label_singular: Articolo
+    description: Gli articoli del blog. Ogni articolo è una cartella con il testo e le sue immagini.
+    folder: src/content/blog
+    # One folder per post: src/content/blog/<slug>/index.md, with its images next to it
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    extension: md
+    format: frontmatter
+    create: true
+    slug:
+      template: "{{title}}"
+      # The folder name is the post address: it can be chosen when the post is created, not changed
+      # later (it would break links to the post)
+      editable: [create]
+      hint: Diventa l'indirizzo dell'articolo, es. cknlgs.cc/blog/viaggio-a-lisbona/. Non si può cambiare dopo il primo salvataggio.
+      pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Solo lettere minuscole, numeri e trattini (es. viaggio-a-lisbona)."]
+    preview_path: "blog/{{slug}}/"
+    summary: "{{title}}"
+    sortable_fields:
+      fields: [pubDate, title, author]
+      default:
+        field: pubDate
+        direction: descending
+    view_filters:
+      - label: Bozze
+        field: draft
+        pattern: true
+    fields:
+      - label: Titolo
+        name: title
+        widget: string
+      - label: Descrizione
+        name: description
+        widget: string
+        hint: Breve riassunto, compare su Google e nelle anteprime quando condividi il link.
+      - label: Data di pubblicazione
+        name: pubDate
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        default: "{{now}}"
+      - label: Data di aggiornamento
+        name: updatedDate
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        required: false
+        hint: Solo se modifichi l'articolo dopo averlo pubblicato.
+      - label: Autore
+        name: author
+        widget: string
+        required: false
+        hint: Se lo lasci vuoto non viene mostrato nessun nome.
+      - label: Immagine di copertina
+        name: heroImage
+        widget: image
+        required: false
+        choose_url: false
+        hint: Compare in home, in cima all'articolo e nelle anteprime social.
+      - label: Tag
+        name: tags
+        widget: list
+        required: false
+        hint: Argomenti dell'articolo, uno per casella (es. viaggi). Usa il pulsante sotto per aggiungerne altri.
+      - label: Lingua
+        name: lang
+        widget: select
+        options:
+          - { label: English, value: en }
+          - { label: Italiano, value: it }
+        default: en
+        hint: Serve ai lettori di schermo per pronunciare correttamente il testo.
+      - label: Bozza
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+        hint: Attivala per salvare l'articolo senza pubblicarlo; disattivala quando è pronto.
+      - label: Testo
+        name: body
+        widget: markdown
+        # The title is already the page heading (h1): sections start from h2
+        buttons:
+          - bold
+          - italic
+          - strikethrough
+          - code
+          - link
+          - heading-two
+          - heading-three
+          - heading-four
+          - quote
+          - bulleted-list
+          - numbered-list
+        editor_components: [image, code-block]
+        linked_images: false

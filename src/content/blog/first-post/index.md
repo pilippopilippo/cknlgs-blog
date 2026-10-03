@@ -1,10 +1,13 @@
 ---
-title: "First post"
-description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 08 2022"
-heroImage: "./copertina.jpg"
-author: "pilippopilippo"
-tags: ["lorem ipsum", "test"]
+title: First post
+description: Lorem ipsum dolor sit amet
+pubDate: 2022-07-08
+author: pilippopilippo
+heroImage: ./copertina.jpg
+tags:
+  - lorem ipsum
+  - test
+lang: en
 draft: true
 ---
 

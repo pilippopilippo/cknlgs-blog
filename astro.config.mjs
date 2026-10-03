@@ -17,7 +17,11 @@ export default defineConfig({
 	compressHTML: true,
 	// The site's CSS is small: inline it in each page instead of separate render-blocking files
 	build: { inlineStylesheets: "always" },
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		// The writing panel (/admin/) isn't a page for readers
+		sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/admin/") }),
+	],
 	markdown: {
 		// GitHub's high-contrast dark theme: every syntax color is at least 7:1 on the code background (WCAG AAA)
 		shikiConfig: { theme: "github-dark-high-contrast" },

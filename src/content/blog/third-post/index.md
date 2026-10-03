@@ -1,10 +1,13 @@
 ---
-title: "Third post"
-description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 22 2022"
-heroImage: "./copertina.jpg"
-author: "Mario Rossi"
-tags: ["lorem ipsum", "cucina"]
+title: Third post
+description: Lorem ipsum dolor sit amet
+pubDate: 2022-07-22
+author: Mario Rossi
+heroImage: ./copertina.jpg
+tags:
+  - lorem ipsum
+  - cucina
+lang: en
 draft: true
 ---
 
