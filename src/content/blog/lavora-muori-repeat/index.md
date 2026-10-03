@@ -7,7 +7,7 @@ heroImage: https://images.unsplash.com/photo-1622034329097-e9cf36069a3e?crop=ent
 tags:
   - work
 lang: it
-draft: true
+draft: false
 ---
 
 Testo
