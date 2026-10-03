@@ -2,7 +2,14 @@
 import { Image } from 'astro:assets';
 import FormattedDate from './FormattedDate.astro';
 import TagList from './TagList.astro';
-import { type Post, coverTransitionName, postTags, readingMinutes } from '../utils/posts';
+import {
+	type Post,
+	coverTransitionName,
+	isOptimizableRemoteImage,
+	isRemoteImage,
+	postTags,
+	readingMinutes,
+} from '../utils/posts';
 
 interface Props {
 	posts: Post[];
@@ -19,17 +26,30 @@ const { posts } = Astro.props;
 			return (
 				<li>
 					<a href={`/blog/${post.id}/`}>
-						{post.data.heroImage && (
-							// The first (featured) post is shown full width
-							<Image
-								width={i === 0 ? 960 : 720}
-								src={post.data.heroImage}
-								alt=""
-								loading={i === 0 ? 'eager' : 'lazy'}
-								fetchpriority={i === 0 ? 'high' : 'auto'}
-								style={`view-transition-name: ${coverTransitionName(post.id)}`}
-							/>
-						)}
+						{post.data.heroImage &&
+							(isRemoteImage(post.data.heroImage) && !isOptimizableRemoteImage(post.data.heroImage) ? (
+								// A remote image from a host that isn't allowed is shown as it is
+								<img
+									src={post.data.heroImage}
+									width={i === 0 ? 960 : 720}
+									alt=""
+									loading={i === 0 ? 'eager' : 'lazy'}
+									fetchpriority={i === 0 ? 'high' : 'auto'}
+									decoding="async"
+									style={`view-transition-name: ${coverTransitionName(post.id)}`}
+								/>
+							) : (
+								// The first (featured) post is shown full width
+								<Image
+									width={i === 0 ? 960 : 720}
+									src={post.data.heroImage}
+									inferSize={isRemoteImage(post.data.heroImage) || undefined}
+									alt=""
+									loading={i === 0 ? 'eager' : 'lazy'}
+									fetchpriority={i === 0 ? 'high' : 'auto'}
+									style={`view-transition-name: ${coverTransitionName(post.id)}`}
+								/>
+							))}
 						<h2 class="title">{post.data.title}</h2>
 						<p class="date">
 							<FormattedDate date={post.data.pubDate} />

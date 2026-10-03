@@ -86,9 +86,10 @@ Su [cknlgs.cc/admin/](https://cknlgs.cc/admin/) c'è un pannello di scrittura ([
 **Prima volta: accesso con un token GitHub** (da rifare solo quando il token scade o cambi dispositivo)
 
 1. Apri `cknlgs.cc/admin/` e tocca **Accedi con Token di Accesso**.
-2. Tocca il link alla *pagina delle impostazioni di GitHub*: si apre la creazione di un token con i permessi già compilati (nome "Sveltia CMS", *Contents: Read and write*).
-3. In *Repository access* scegli **Only select repositories** → `cknlgs-blog`, imposta la scadenza (es. 1 anno) e premi **Generate token**.
-4. Copia il token (`github_pat_…`), torna al pannello, incollalo e premi **Accedi**.
+2. Tocca il link alla *pagina delle impostazioni di GitHub*: si apre la creazione di un nuovo token.
+3. In *Repository access* scegli **Only select repositories** → `cknlgs-blog` e imposta la scadenza (es. 1 anno).
+4. In *Permissions* → **Add permissions** spunta **Contents** e impostalo su **Read and write** (GitHub aggiunge da solo *Metadata: Read-only*). Non serve nient'altro. Poi premi **Generate token**.
+5. Copia il token (`github_pat_…`), torna al pannello, incollalo e premi **Accedi**.
 
 Il token resta salvato solo in quel browser. Se perdi il telefono, revocalo da GitHub → *Settings → Developer settings → Personal access tokens*.
 
@@ -97,8 +98,9 @@ Il token resta salvato solo in quel browser. Se perdi il telefono, revocalo da G
 - **Articoli → Nuovo** (su telefono: tocca *Articoli*, poi il pulsante **+**). I campi sono gli stessi dell'intestazione: titolo, descrizione, data (oggi in automatico), autore, copertina, tag, lingua, bozza e testo.
 - **Indirizzo dell'articolo**: viene creato dal titolo (`Viaggio a Lisbona` → `/blog/viaggio-a-lisbona/`). Per sceglierlo tu: menu **⋮** in alto → **Slug**, prima del primo salvataggio. Se esiste già un articolo con lo stesso indirizzo, al nuovo viene aggiunto `-1`.
 - **Foto**: puoi scattarle o sceglierle dalla galleria, anche in formato HEIC dell'iPhone. Prima del caricamento il pannello le riduce (al massimo 2560 px), le converte in WebP e rinomina il file (`IMG 1234.HEIC` → `img-1234.webp`). I dati di posizione GPS della foto vengono eliminati. Nel testo usa il pulsante **Immagine** e compila sempre il *testo alternativo*.
+- **Dove finiscono le immagini**: nella finestra di scelta, *Entry Assets* è la cartella dell'articolo (la scelta giusta quasi sempre); *Global Assets* è `src/assets/images/`, per immagini usate da più articoli; *Unsplash* e *Pexels* sono cataloghi di foto gratuite: la foto viene salvata come link e il sito la scarica e la ottimizza a ogni pubblicazione.
 - **Bozza**: attiva l'interruttore per salvare senza pubblicare; disattivalo quando l'articolo è pronto. In elenco, *Filtra → Bozze* mostra solo le bozze.
-- **Salva** pubblica subito: ogni salvataggio è un commit su `main`.
+- **Salva** pubblica subito: ogni salvataggio è un commit su `main`. Se dopo qualche minuto la modifica non compare sul sito, la pubblicazione su Cloudflare si è fermata per un errore e il sito è rimasto com'era: vedi [Errori comuni](#errori-comuni-durante-la-pubblicazione).
 - Puoi modificare anche gli articoli esistenti; **Elimina** (menu ⋮) cancella l'articolo insieme alle sue immagini.
 
 Da sapere:
@@ -106,6 +108,7 @@ Da sapere:
 - I titoli dentro il testo partono dal livello 2 (il titolo principale è già `title`), per questo il pulsante "Titolo 1" non c'è.
 - Il pannello mostra solo gli articoli `.md`, non quelli `.mdx`. La pagina About si modifica dal codice.
 - L'anteprima a fianco del modulo mostra i contenuti, non l'aspetto finale del sito.
+- Un'immagine indicata con un link (`https://…`) da un sito diverso da Unsplash e Pexels viene mostrata così com'è, senza ottimizzazione. Gli indirizzi ammessi sono in `src/utils/remote-images.mjs`.
 - I campi del pannello sono definiti in `public/admin/config.yml` e devono corrispondere allo schema in `src/content.config.ts`: se ne aggiungi uno, aggiornali entrambi.
 - Sveltia CMS è installato con npm a una versione fissa (`@sveltia/cms` in `package.json`) e servito dal sito stesso: per aggiornarlo, `npm install -D -E @sveltia/cms@latest`, poi prova il pannello con `npm run preview`.
 
