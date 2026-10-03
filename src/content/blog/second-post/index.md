@@ -1,9 +1,12 @@
 ---
-title: "Second post"
-description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 15 2022"
-heroImage: "./copertina.jpg"
-tags: ["lorem ipsum", "viaggi"]
+title: Second post
+description: Lorem ipsum dolor sit amet
+pubDate: 2022-07-15
+heroImage: ./copertina.jpg
+tags:
+  - lorem ipsum
+  - viaggi
+lang: en
 draft: true
 ---
 

@@ -70,7 +70,7 @@ Metti le immagini nella stessa cartella e richiamale con `./` davanti al nome:
 
 ### 4. Pubblica
 
-Fai arrivare le modifiche su `main` (con un commit da GitHub o dal tuo computer). Cloudflare ricostruisce e pubblica il sito da solo.
+Fai arrivare le modifiche su `main` (dal [pannello di scrittura](#scrivere-dal-telefono-pannello-admin), con un commit da GitHub o dal tuo computer). Cloudflare ricostruisce e pubblica il sito da solo.
 
 **Dal sito di GitHub, senza installare niente:**
 
@@ -78,6 +78,36 @@ Fai arrivare le modifiche su `main` (con un commit da GitHub o dal tuo computer)
 2. *Add file → Create new file* e scrivi come nome `viaggio-a-lisbona/index.md`: la `/` crea la cartella.
 3. Incolla il testo e fai *Commit changes*.
 4. Entra nella nuova cartella e usa *Add file → Upload files* per caricare le immagini.
+
+### Scrivere dal telefono: pannello `/admin`
+
+Su [cknlgs.cc/admin/](https://cknlgs.cc/admin/) c'è un pannello di scrittura ([Sveltia CMS](https://github.com/sveltia/sveltia-cms)) che funziona bene anche da telefono: compili un modulo, scrivi il testo con i pulsanti per grassetto, titoli, liste e immagini, e premi **Salva**. Il pannello salva l'articolo nel repository (cartella, `index.md` e immagini, come descritto sopra) e Cloudflare lo pubblica in pochi minuti.
+
+**Prima volta: accesso con un token GitHub** (da rifare solo quando il token scade o cambi dispositivo)
+
+1. Apri `cknlgs.cc/admin/` e tocca **Accedi con Token di Accesso**.
+2. Tocca il link alla *pagina delle impostazioni di GitHub*: si apre la creazione di un token con i permessi già compilati (nome "Sveltia CMS", *Contents: Read and write*).
+3. In *Repository access* scegli **Only select repositories** → `cknlgs-blog`, imposta la scadenza (es. 1 anno) e premi **Generate token**.
+4. Copia il token (`github_pat_…`), torna al pannello, incollalo e premi **Accedi**.
+
+Il token resta salvato solo in quel browser. Se perdi il telefono, revocalo da GitHub → *Settings → Developer settings → Personal access tokens*.
+
+**Scrivere un articolo**
+
+- **Articoli → Nuovo** (su telefono: tocca *Articoli*, poi il pulsante **+**). I campi sono gli stessi dell'intestazione: titolo, descrizione, data (oggi in automatico), autore, copertina, tag, lingua, bozza e testo.
+- **Indirizzo dell'articolo**: viene creato dal titolo (`Viaggio a Lisbona` → `/blog/viaggio-a-lisbona/`). Per sceglierlo tu: menu **⋮** in alto → **Slug**, prima del primo salvataggio. Se esiste già un articolo con lo stesso indirizzo, al nuovo viene aggiunto `-1`.
+- **Foto**: puoi scattarle o sceglierle dalla galleria, anche in formato HEIC dell'iPhone. Prima del caricamento il pannello le riduce (al massimo 2560 px), le converte in WebP e rinomina il file (`IMG 1234.HEIC` → `img-1234.webp`). I dati di posizione GPS della foto vengono eliminati. Nel testo usa il pulsante **Immagine** e compila sempre il *testo alternativo*.
+- **Bozza**: attiva l'interruttore per salvare senza pubblicare; disattivalo quando l'articolo è pronto. In elenco, *Filtra → Bozze* mostra solo le bozze.
+- **Salva** pubblica subito: ogni salvataggio è un commit su `main`.
+- Puoi modificare anche gli articoli esistenti; **Elimina** (menu ⋮) cancella l'articolo insieme alle sue immagini.
+
+Da sapere:
+
+- I titoli dentro il testo partono dal livello 2 (il titolo principale è già `title`), per questo il pulsante "Titolo 1" non c'è.
+- Il pannello mostra solo gli articoli `.md`, non quelli `.mdx`. La pagina About si modifica dal codice.
+- L'anteprima a fianco del modulo mostra i contenuti, non l'aspetto finale del sito.
+- I campi del pannello sono definiti in `public/admin/config.yml` e devono corrispondere allo schema in `src/content.config.ts`: se ne aggiungi uno, aggiornali entrambi.
+- Sveltia CMS è installato con npm a una versione fissa (`@sveltia/cms` in `package.json`) e servito dal sito stesso: per aggiornarlo, `npm install -D -E @sveltia/cms@latest`, poi prova il pannello con `npm run preview`.
 
 ### Tag
 
@@ -228,11 +258,11 @@ Il messaggio indica sempre il nome della cartella dell'articolo con il problema 
 ```
 src/
 ├── content/blog/      ← gli articoli (una cartella ciascuno)
-├── pages/             ← pagine: home (index.astro), about.astro, tags/, feed RSS
+├── pages/             ← pagine: home (index.astro), about.astro, tags/, feed RSS, admin/ (pannello di scrittura)
 ├── utils/posts.ts     ← elenco articoli pubblicati e gestione dei tag
 ├── layouts/           ← impaginazione degli articoli
 ├── components/        ← intestazione, piè di pagina, elenco articoli, tag, tasto Copy e zoom immagini
 ├── styles/global.css  ← stile generale
 └── consts.ts          ← nome e descrizione del sito
-public/                ← file serviti così come sono (favicon, font)
+public/                ← file serviti così come sono (favicon, font, admin/config.yml con i campi del pannello)
 ```

@@ -9,3 +9,8 @@
 # Fonts rarely change: let browsers keep them for 30 days
 /fonts/*
   Cache-Control: public, max-age=2592000
+
+# Writing panel: never in search results, and always the latest settings
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-cache

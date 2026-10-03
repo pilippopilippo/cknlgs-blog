@@ -1,11 +1,14 @@
 ---
-title: "Esempio: post con immagini"
-description: "Come organizzare un articolo con le sue immagini in una cartella dedicata."
-pubDate: "Oct 02 2026"
-heroImage: "./copertina.jpg"
-author: "pilippopilippo"
-lang: "it"
-tags: ["test", "esempio", "immagini"]
+title: 'Esempio: post con immagini'
+description: Come organizzare un articolo con le sue immagini in una cartella dedicata.
+pubDate: 2026-10-02
+author: pilippopilippo
+heroImage: ./copertina.jpg
+tags:
+  - test
+  - esempio
+  - immagini
+lang: it
 draft: true
 ---
 
